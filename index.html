@@ -1,0 +1,521 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F2F2F7;--card:rgba(255,255,255,0.9);--card2:rgba(255,255,255,0.65);
+  --text:#0f1111;--text2:#6b6e6e;--text3:#b0b0b8;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.11);
+  --face:rgba(255,255,255,0.92);--tick:#d1d1d6;
+  --accent:#BF0000;--accent-light:rgba(191,0,0,0.10);
+}
+.dk{
+  --bg:#0d0d0f;--card:rgba(28,28,30,0.88);--card2:rgba(44,44,46,0.65);
+  --text:#f2f2f7;--text2:#8e8e93;--text3:#48484a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.11);
+  --face:rgba(18,18,20,0.94);--tick:#3a3a3c;
+  --accent:#BF0000;--accent-light:rgba(191,0,0,0.16);
+}
+body{background:transparent;}
+#app{background:var(--bg);font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--text);max-width:420px;margin:0 auto;overflow:hidden;position:relative;transition:background .3s,color .3s;}
+.slide-wrap{display:flex;width:200%;transition:transform .36s cubic-bezier(.4,0,.2,1);}
+.slide-wrap.show-focus{transform:translateX(-50%);}
+.view{width:50%;flex-shrink:0;}
+#calView{padding:20px 16px 40px;}
+.cal-top{text-align:center;margin-bottom:14px;}
+.cal-monthly-msg{font-size:11px;font-weight:300;color:var(--text2);line-height:1.5;}
+.cal-card{background:var(--card);backdrop-filter:blur(20px);border:.5px solid var(--border);border-radius:18px;padding:14px 12px;margin-bottom:10px;}
+.cal-nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cal-title-wrap{text-align:center;line-height:1.25;}
+.cal-title-era{font-size:11px;font-weight:300;color:var(--text2);letter-spacing:.04em;display:block;margin-bottom:1px;}
+.cal-title-month{font-size:24px;font-weight:300;color:var(--text);letter-spacing:.02em;display:block;}
+.cal-nav{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:2px 10px;border-radius:9px;transition:background .15s;line-height:1;}
+.cal-nav:hover{background:var(--accent-light);}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
+.cal-dow span{text-align:center;font-size:9px;font-weight:400;letter-spacing:.06em;color:var(--text3);padding:2px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-cell{display:flex;flex-direction:column;align-items:center;min-height:52px;border-radius:8px;cursor:pointer;overflow:hidden;position:relative;transition:background .15s;padding:0 0 2px 0;}
+.cal-cell:hover{background:var(--accent-light);}
+.cal-cell.empty{cursor:default;pointer-events:none;min-height:52px;}
+.cal-num{font-size:12px;font-weight:300;color:var(--text);padding:4px 0 2px;line-height:1;flex-shrink:0;z-index:1;position:relative;}
+.cal-cell.today .cal-num{background:var(--accent);color:#fff;font-weight:500;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;padding:0;margin:3px 0 1px;}
+.cal-cell.has-sel .cal-num{color:var(--accent);font-weight:500;}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.6;margin-bottom:1px;}
+.cell-bars{width:100%;display:flex;flex-direction:column;gap:1px;padding:0 1px;}
+.cell-bar{height:5px;border-radius:2px;width:100%;opacity:.85;flex-shrink:0;}
+.cell-bar.bar-start{border-radius:2px 0 0 2px;margin-left:2px;width:calc(100% - 2px);}
+.cell-bar.bar-end{border-radius:0 2px 2px 0;margin-right:2px;width:calc(100% - 2px);}
+.cell-bar.bar-mid{border-radius:0;width:100%;}
+.cell-bar.bar-solo{border-radius:2px;width:calc(100% - 4px);margin:0 2px;}
+.date-inp-wrap{position:relative;flex:1;}
+.date-inp-wrap input[type=date]{width:100%;background:var(--card2);border:.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:inherit;font-size:12px;font-weight:300;padding:9px 11px;outline:none;transition:border-color .2s;cursor:pointer;}
+.date-inp-wrap input[type=date]:focus{border-color:var(--accent);}
+.promo-list{display:flex;flex-direction:column;gap:5px;}
+.promo-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--card);border:.5px solid var(--border);}
+.pi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pi-info{flex:1;min-width:0;}
+.pi-range{font-size:10px;color:var(--text3);letter-spacing:.03em;}
+.pi-text{font-size:12px;font-weight:400;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pi-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 4px;flex-shrink:0;}
+.pi-del:hover{color:var(--accent);}
+.slbl{font-size:9px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:9px;}
+.pf{display:flex;flex-direction:column;gap:7px;}
+.pf-row{display:flex;gap:6px;align-items:center;}
+.pf-inp,.pf-sel{flex:1;background:var(--card2);border:.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:inherit;font-size:12px;font-weight:300;padding:9px 11px;outline:none;transition:border-color .2s;}
+.pf-inp:focus,.pf-sel:focus{border-color:var(--accent);}
+.pf-sel{cursor:pointer;}
+.pf-inp::placeholder{color:var(--text3);}
+.pf-custom{display:none;}
+.pf-custom.show{display:flex;}
+.pf-color-row{display:flex;align-items:center;gap:7px;}
+.pf-clbl{font-size:10px;color:var(--text3);}
+.pf-sw{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .14s,border-color .14s;flex-shrink:0;}
+.pf-sw.on{transform:scale(1.2);border-color:rgba(0,0,0,.25);}
+.pf-add{background:var(--accent);border:none;border-radius:11px;color:#fff;font-family:inherit;font-size:12px;font-weight:300;padding:10px;cursor:pointer;transition:opacity .2s;}
+.pf-add:active{opacity:.75;}
+.time-sep{font-size:11px;color:var(--text3);flex-shrink:0;}
+.swr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sw{width:20px;height:20px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:transform .14s,border-color .14s;}
+.sw.on,.sw:hover{transform:scale(1.2);border-color:var(--border2);}
+.tw{display:flex;align-items:center;gap:5px;margin-left:auto;}
+.tl2{font-size:11px;font-weight:300;color:var(--text2);}
+.tog{position:relative;width:40px;height:22px;cursor:pointer;}
+.tog input{opacity:0;width:0;height:0;}
+.tsl{position:absolute;inset:0;background:var(--card2);border-radius:20px;border:.5px solid var(--border2);}
+.tsl:before{content:'';position:absolute;width:16px;height:16px;background:var(--accent);border-radius:50%;left:2px;top:2px;transition:transform .3s;}
+.tog input:checked+.tsl:before{transform:translateX(18px);}
+
+/* ── FOCUS VIEW ── */
+#focusView{padding:16px 20px 48px;}
+
+/* ── ナビゲーション行: 左に戻るボタン、右に前日/翌日 ── */
+.focus-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.back-btn{display:inline-flex;align-items:center;gap:3px;background:none;border:none;color:var(--accent);font-family:inherit;font-size:13px;font-weight:400;cursor:pointer;padding:4px 6px 4px 2px;letter-spacing:.01em;transition:opacity .2s;border-radius:8px;}
+.back-btn:hover{opacity:.6;}
+.back-btn svg{width:7px;height:12px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.day-nav{display:flex;gap:6px;}
+.day-btn{background:none;border:.5px solid var(--border2);border-radius:9px;color:var(--text2);font-family:inherit;font-size:12px;font-weight:300;cursor:pointer;padding:4px 10px;transition:background .15s,color .15s;}
+.day-btn:hover{background:var(--accent-light);color:var(--accent);border-color:var(--accent);}
+
+.focus-hdr{text-align:center;margin-bottom:10px;position:relative;}
+
+/* ── 猫ライン ── */
+.cat-lane{position:relative;height:22px;margin-bottom:4px;overflow:hidden;}
+/* 道（点線） */
+.cat-lane::before{
+  content:'';position:absolute;top:50%;left:0;right:0;height:1px;
+  border-top:1.5px dashed var(--text3);opacity:.35;transform:translateY(-50%);
+}
+/* ゴールフラグ */
+.cat-lane::after{
+  content:'🏁';position:absolute;right:2px;top:50%;transform:translateY(-50%);
+  font-size:13px;line-height:1;
+}
+/* 猫アイコン */
+.cat-icon{position:absolute;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;transition:left .8s ease;pointer-events:none;}
+
+.focus-date-line{cursor:pointer;display:inline-flex;align-items:baseline;gap:5px;padding:5px 14px;border-radius:14px;transition:background .18s;}
+.focus-date-line:hover{background:var(--accent-light);}
+.focus-date-main{font-size:16px;font-weight:600;letter-spacing:.01em;color:var(--text);line-height:1;}
+.focus-date-dow{font-size:16px;font-weight:600;letter-spacing:.02em;color:var(--text);line-height:1;}
+.focus-msg{font-size:11px;font-weight:400;color:var(--text2);margin-top:5px;line-height:1.5;padding:0 8px;}
+.focus-time{font-size:11px;font-weight:200;letter-spacing:.18em;color:var(--text3);margin-top:3px;}
+.clock-wrap{position:relative;width:280px;height:280px;margin:0 auto 16px;}
+#cC,#tC{position:absolute;top:0;left:0;}
+#cC{z-index:1;}#tC{z-index:2;}
+.card{background:var(--card);backdrop-filter:blur(20px);border:.5px solid var(--border);border-radius:18px;padding:13px 15px;margin-bottom:9px;}
+.ar{display:flex;gap:8px;margin-bottom:7px;}
+.ar input{background:var(--card2);border:.5px solid var(--border2);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;font-weight:300;padding:10px 12px;outline:none;flex:1;transition:border-color .2s;}
+.ar input::placeholder{color:var(--text3);}
+.ar input:focus{border-color:var(--accent);}
+.time-row{display:flex;gap:6px;margin-bottom:7px;align-items:center;}
+.time-row select{background:var(--card2);border:.5px solid var(--border2);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;font-weight:300;padding:10px;outline:none;flex:1;cursor:pointer;transition:border-color .2s;}
+.time-row select:focus{border-color:var(--accent);}
+.memo-inp{width:100%;background:var(--card2);border:.5px solid var(--border2);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;font-weight:300;padding:10px 12px;outline:none;margin-bottom:9px;transition:border-color .2s;}
+.memo-inp::placeholder{color:var(--text3);}
+.memo-inp:focus{border-color:var(--accent);}
+.cpw{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+.cplbl{font-size:10px;font-weight:300;color:var(--text3);}
+.csws{display:flex;gap:8px;}
+.csw{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .14s,border-color .14s;}
+.csw.on{transform:scale(1.2);border-color:rgba(255,255,255,.5);}
+.csw:not(.on):hover{transform:scale(1.08);}
+.badd{width:100%;background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:13px;font-weight:300;letter-spacing:.05em;padding:11px;cursor:pointer;transition:opacity .2s;}
+.badd:active{opacity:.75;}
+.tl{display:flex;flex-direction:column;gap:4px;}
+.ts{display:flex;align-items:flex-start;gap:9px;padding:9px 13px;border-radius:13px;border:.5px solid var(--border);background:var(--card);min-height:40px;transition:border-color .2s,background .3s;}
+.ts.ht{border-color:rgba(191,0,0,.22);background:var(--accent-light);}
+.tt{font-size:11px;font-weight:300;color:var(--text2);min-width:50px;flex-shrink:0;padding-top:1px;}
+.tts{display:flex;flex-direction:column;gap:3px;flex:1;}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;}
+.tag{display:flex;align-items:center;gap:4px;border-radius:20px;padding:3px 8px 3px 6px;font-size:11px;font-weight:400;}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.tag-dur{font-size:10px;opacity:.6;margin-left:1px;}
+.del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:0 0 0 2px;}
+.del:hover{color:var(--accent);}
+.memo-txt{font-size:10px;font-weight:300;color:var(--text2);line-height:1.4;padding-left:1px;}
+.emp{font-size:11px;color:var(--text3);font-weight:200;padding-top:1px;}
+.otlbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;}
+</style>
+
+<div id="app">
+ <div class="slide-wrap" id="slideWrap">
+
+  <!-- ══ CALENDAR VIEW ══ -->
+  <div id="calView" class="view">
+   <div class="cal-top"><div class="cal-monthly-msg" id="calMonthlyMsg"></div></div>
+   <div class="cal-card">
+    <div class="cal-nav-row">
+     <button class="cal-nav" onclick="shiftMonth(-1)">‹</button>
+     <div class="cal-title-wrap">
+      <span class="cal-title-era" id="calTitleEra"></span>
+      <span class="cal-title-month" id="calTitleMonth"></span>
+     </div>
+     <button class="cal-nav" onclick="shiftMonth(1)">›</button>
+    </div>
+    <div class="cal-dow"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+   </div>
+   <div id="promoListWrap"></div>
+   <div class="cal-card" style="margin-top:0;">
+    <div class="slbl" style="margin-bottom:9px;">プロモーションを追加</div>
+    <div class="pf">
+     <select class="pf-sel" id="pfType" onchange="onTypeChange()">
+      <option value="楽天マラソン">楽天マラソン</option>
+      <option value="Amazonセール">Amazonセール</option>
+      <option value="Yahooイベント">Yahooイベント</option>
+      <option value="other">その他（自由記入）</option>
+     </select>
+     <div class="pf-custom" id="pfCustomWrap">
+      <input class="pf-inp" type="text" id="pfCustom" placeholder="イベント名を入力..." maxlength="24"/>
+     </div>
+     <div class="pf-row">
+      <div class="date-inp-wrap"><input type="date" id="pfStart"/></div>
+      <span class="time-sep">→</span>
+      <div class="date-inp-wrap"><input type="date" id="pfEnd"/></div>
+     </div>
+     <div class="pf-color-row">
+      <span class="pf-clbl">色</span>
+      <div id="pfColorSwatches"></div>
+     </div>
+     <button class="pf-add" onclick="addPromo()">＋ 追加</button>
+    </div>
+   </div>
+   <div class="cal-card" style="margin-top:0;">
+    <div class="swr" id="swrCal">
+     <div class="sw on" style="background:#BF0000;" data-c="#BF0000" onclick="setTheme(this)"></div>
+     <div class="sw" style="background:#FF9900;" data-c="#FF9900" onclick="setTheme(this)"></div>
+     <div class="sw" style="background:#FF0033;" data-c="#FF0033" onclick="setTheme(this)"></div>
+     <div class="sw" style="background:#00B900;" data-c="#00B900" onclick="setTheme(this)"></div>
+     <div class="sw" style="background:#666666;" data-c="#666666" onclick="setTheme(this)"></div>
+     <input type="color" id="tc2Cal" value="#BF0000" onchange="setThemeColor(this.value)"/>
+     <div class="tw">
+      <span class="tl2">ライト</span>
+      <label class="tog"><input type="checkbox" id="dtogCal" onchange="toggleDark(this)"/><span class="tsl"></span></label>
+      <span class="tl2">ダーク</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- ══ FOCUS VIEW ══ -->
+  <div id="focusView" class="view">
+
+   <!-- ナビ行: 左=カレンダー戻る / 右=前日・翌日 -->
+   <div class="focus-nav">
+    <button class="back-btn" onclick="goCalendar()">
+     <svg viewBox="0 0 7 12"><polyline points="6,1 1,6 6,11"/></svg>
+     カレンダー
+    </button>
+    <div class="day-nav">
+     <button class="day-btn" onclick="shiftDay(-1)">‹ 前日</button>
+     <button class="day-btn" onclick="shiftDay(1)">翌日 ›</button>
+    </div>
+   </div>
+
+   <!-- 猫ライン -->
+   <div class="cat-lane">
+    <span class="cat-icon" id="catIcon">🐈</span>
+   </div>
+
+   <div class="focus-hdr">
+    <div class="focus-date-line" onclick="goCalendar()">
+     <span class="focus-date-main" id="focusDateMain"></span>
+     <span class="focus-date-dow" id="focusDateDow"></span>
+    </div>
+    <div class="focus-msg" id="focusMsg"></div>
+    <div class="focus-time" id="td">--:--:--</div>
+   </div>
+
+   <div class="clock-wrap">
+    <canvas id="cC" width="280" height="280"></canvas>
+    <canvas id="tC" width="280" height="280"></canvas>
+   </div>
+   <div class="card" style="margin-bottom:9px;">
+    <div class="slbl">Add Task</div>
+    <div class="ar"><input type="text" id="ti" placeholder="タスク名..." maxlength="10"/></div>
+    <div class="time-row">
+     <select id="hs" onchange="syncEndTime()"></select>
+     <span class="time-sep">→</span>
+     <select id="he"></select>
+    </div>
+    <input class="memo-inp" type="text" id="mi" placeholder="メモ（任意）..." maxlength="40"/>
+    <div class="cpw"><span class="cplbl">カラー</span><div class="csws" id="csws"></div></div>
+    <button class="badd" onclick="addTask()">＋ タスクを追加</button>
+   </div>
+   <div class="slbl" style="margin-top:4px;">Timeline</div>
+   <div class="tl" id="tl"></div>
+  </div>
+
+ </div>
+</div>
+
+<script>
+var CS=9,CE=18;
+var URGENCY=[{color:'#BF0000',label:'最優先'},{color:'#FF9900',label:'高'},{color:'#00A0F0',label:'中'},{color:'#00B900',label:'低'},{color:'#666666',label:'その他'}];
+var PROMO_COLORS=['#BF0000','#FF9900','#FF0033','#00B900','#666666'];
+var selPromoColor=PROMO_COLORS[0];
+var DAYS_JP=['日','月','火','水','木','金','土'];
+function wareki(y){if(y>=2019)return '令和'+(y-2018);if(y>=1989)return '平成'+(y-1988);if(y>=1926)return '昭和'+(y-1925);return String(y);}
+var QUOTES=['今日のノルマ：とりあえず、うちの猫よりは有能でいること。','コーヒーを淹れた。全人類、今のうちに逃げとけ。','効率の化身が、今、目を覚ました。','今日の私は、昨日の私が嫉妬するほど有能だ。','締め切りが私を追っているんじゃない。私が締め切りを待たせているんだ。','猫が寝ている間に、世界を少しだけ良くしておく。','私を止めるには、PCの電源を切るしかない。','今日のToDoリスト：1.世界を驚かせる。以上。','天才の準備は整った。あとはキーボードが私の速度についてくるかだ。','18時までの私の辞書に「不可能」はない。18時以降は辞書を閉じるがね。','私の集中力が、ついにWi-Fiの速度を超えた。','「猫の手も借りたい」？いや、私がいれば猫は寝てていい。','今日の私は、100%の情熱と、200%のコーヒーでできている。','解決できない問題はない。私がまだ手をつけていないだけだ。','世界で最も生産的な「9:00」が始まった。','集中。それは他をすべて無視する高度な技術。','誰もが「無理だ」と言うから、私がやる意味がある。','完璧主義？いや、「私レベル」と呼んでくれ。','私が席についた瞬間、生産性が300%跳ね上がった。','無駄な動きがゼロ。もはや私はルンバより効率的だ。','今日のアウトプット、国宝級。','売上が上がる音が聞こえる。私の仕事のおかげでね。','今日という日は、私の伝説の1ページになる。','昨日の自分に勝つ。それが唯一の対等な勝負だ。','準備完了。さあ、最高の一日にしよう。'];
+var MONTHLY_QUOTES={1:['正月休みでフル充電。1月の私は誰にも止められない。','餅を食べる暇があるなら、売上を積み上げる。','初夢は「今期目標達成」。さて、現実にしに行くか。','寒さが私を止めると思っているなら、甘い。'],2:['2月は短い。だからこそ私の密度が際立つ。','節分で鬼を追い払った。今日の現場に「不可能」はいない。','寒さのピークでも、私の生産性は夏日だ。','春の足音が聞こえ始めた。それより先に、私の成果が届く。'],3:['3月、年度末。混乱の中でこそ、私が輝く。','桜が咲く前に、私の実績が満開だ。','年度末の修羅場が、私にとってはハイシーズンだ。','ラストスパートなんて言葉は知らない。ずっと全力だからだ。'],4:['新年度スタート。新入社員より私の方が、圧倒的にフレッシュだ。','桜吹雪の中でも、私のタスク処理は止まらない。','4月は種まきの季節。私の仕事は、既に芽吹いている。','新年度初月、私のパフォーマンスが今期の天井を決める。'],5:['5月はGW。だが私が在籍するだけで、現場の生産性は連休を超えていく。','五月病？私の辞書には「五月晴れ」のような快進撃しかない。','GWが明けた瞬間、私のエンジンはレッドゾーンに入る。','5月の青空と同じくらい、私の頭の中はクリアだ。'],6:['祝日がなくても毎日がHappy。それが6月の私。','雨音は、私の高速タイピングを彩るBGMだ。','6月、梅雨入り。私の生産性は梅雨入りしない。','半年が過ぎた。振り返れば、全て私の足跡だ。'],7:['7月、夏本番。私の熱量は、気温よりも高い。','七夕の願い事？「現状維持」——既に十分すごいからだ。','猫が夏バテしている。私にそのような概念はない。','7月は上半期ラスト。締めくくりは派手にいこう。'],8:['8月、灼熱の季節。私の仕事への情熱はそれ以上だ。','お盆で街が静かになった。集中するには最高の環境だ。','8月、下半期スタート。後半戦も、先手必勝だ。','セミが鳴いている。私はそれより長く、高く声を上げる。'],9:['9月、涼しさが戻ってきた。私のエンジンも再加速する。','秋の気配と共に、私の集中力が深みを増す。','第3四半期を締める。数字を見れば、私の貢献は一目瞭然だ。','秋晴れの空のように、私の頭の中はクリアで澄んでいる。'],10:['10月、実りの秋。私が種を蒔いた成果を、今こそ刈り取る。','ハロウィンのコスプレより、「有能な社員」の仮装が一番映える。','10月、年度の折り返し。後半戦は私がMVPを獲る。','紅葉のように、私の実績も鮮やかに色づいている。'],11:['11月、年の瀬が近づく。私のラストスパートは既に始まっている。','勤労感謝の日——私は365日、仕事に感謝されている。','寒くなってきた。私の熱量は、気温に反比例して上がる。','今年を振り返るには早い。まだ塗り替える余白がある。'],12:['12月、年の締め。私の締め方は、いつも華やかだ。','クリスマスより、目標達成の方が私には嬉しいプレゼントだ。','今年最後の月、伝説の締めくくりを刻む時だ。','来年の私への最高のギフトは、今日の全力だ。']};
+var themeAccent='#BF0000',dark=false,selUrgIdx=0;
+var allTasks={},promos=[],curDate='',calYear,calMonth;
+function pad(n){return n<10?'0'+n:String(n);}
+function toKey(y,m,d){return y+'-'+pad(m+1)+'-'+pad(d);}
+function todayKey(){var d=new Date();return toKey(d.getFullYear(),d.getMonth(),d.getDate());}
+function fmtKey(k){var p=k.split('-');return parseInt(p[1])+'/'+parseInt(p[2]);}
+function parseKey(k){var p=k.split('-');return {y:parseInt(p[0]),m:parseInt(p[1])-1,d:parseInt(p[2])};}
+try{var _t=localStorage.getItem('df16t');if(_t)allTasks=JSON.parse(_t);}catch(e){}
+try{var _p=localStorage.getItem('df16p');if(_p)promos=JSON.parse(_p);}catch(e){}
+try{var _a=localStorage.getItem('df16a');if(_a)themeAccent=_a;}catch(e){}
+try{var _d=localStorage.getItem('df16d');if(_d)dark=_d==='1';}catch(e){}
+function saveTasks(){try{localStorage.setItem('df16t',JSON.stringify(allTasks));}catch(e){}}
+function savePromos(){try{localStorage.setItem('df16p',JSON.stringify(promos));}catch(e){}}
+function rgba(hex,a){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return 'rgba('+r+','+g+','+b+','+a+')';}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function applyDark(){document.getElementById('app').classList.toggle('dk',dark);document.getElementById('dtogCal').checked=dark;}
+function toggleDark(el){dark=el.checked;applyDark();try{localStorage.setItem('df16d',dark?'1':'0');}catch(e){}}
+applyDark();
+function applyTheme(){document.getElementById('app').style.setProperty('--accent',themeAccent);document.getElementById('app').style.setProperty('--accent-light',rgba(themeAccent,.10));}
+function setTheme(el){document.querySelectorAll('#swrCal .sw').forEach(function(s){s.classList.remove('on');});el.classList.add('on');themeAccent=el.getAttribute('data-c');document.getElementById('tc2Cal').value=themeAccent;applyTheme();try{localStorage.setItem('df16a',themeAccent);}catch(e){}}
+function setThemeColor(c){themeAccent=c;document.querySelectorAll('.sw').forEach(function(s){s.classList.remove('on');});applyTheme();try{localStorage.setItem('df16a',c);}catch(e){}}
+applyTheme();
+function pickFQ(){return QUOTES[Math.floor(Math.random()*QUOTES.length)];}
+function pickMQ(){var m=new Date().getMonth()+1;var l=MONTHLY_QUOTES[m];return l[Math.floor(Math.random()*l.length)];}
+(function(){var el=document.getElementById('csws');URGENCY.forEach(function(u,i){var d=document.createElement('div');d.className='csw'+(i===0?' on':'');d.style.background=u.color;d.title=u.label;d.onclick=function(){document.querySelectorAll('.csw').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selUrgIdx=i;};el.appendChild(d);});})();
+(function(){var el=document.getElementById('pfColorSwatches');el.style.cssText='display:flex;gap:6px;';PROMO_COLORS.forEach(function(c,i){var d=document.createElement('div');d.className='pf-sw'+(i===0?' on':'');d.style.background=c;d.onclick=function(){document.querySelectorAll('.pf-sw').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selPromoColor=c;};el.appendChild(d);});})();
+function buildHS(el){for(var h=0;h<24;h++){var o=document.createElement('option');o.value=h;o.textContent=pad(h)+':00';el.appendChild(o);}}
+buildHS(document.getElementById('hs'));buildHS(document.getElementById('he'));
+function syncEndTime(){var ns=parseInt(document.getElementById('hs').value),ce=parseInt(document.getElementById('he').value);if(ce<=ns)document.getElementById('he').value=Math.min(ns+1,23);}
+function onTypeChange(){var v=document.getElementById('pfType').value;document.getElementById('pfCustomWrap').className='pf-custom'+(v==='other'?' show':'');}
+
+// ── 前日・翌日移動 ──
+function shiftDay(delta){
+  var pk=parseKey(curDate);
+  var d=new Date(pk.y,pk.m,pk.d);
+  d.setDate(d.getDate()+delta);
+  curDate=toKey(d.getFullYear(),d.getMonth(),d.getDate());
+  updateFH();renderTL();
+}
+
+// ── 猫の位置更新（9:00=0%, 18:00=100%） ──
+function updateCat(){
+  var now=new Date();
+  var totalMin=(CE-CS)*60; // 9h = 540min
+  var elapsedMin=(now.getHours()-CS)*60+now.getMinutes()+(now.getSeconds()/60);
+  var ratio=Math.max(0,Math.min(1,elapsedMin/totalMin));
+  var lane=document.getElementById('catIcon');
+  if(!lane)return;
+  // lane幅を取得してゴールフラグ分(24px)を引いた範囲で動かす
+  var laneEl=lane.parentElement;
+  var laneW=laneEl.offsetWidth||300;
+  var maxLeft=laneW-44; // 猫16px+ゴール24px+余白
+  var leftPx=Math.round(ratio*maxLeft);
+  lane.style.left=leftPx+'px';
+  // 9時前 or 18時以降の顔
+  if(ratio>=1){
+    lane.textContent='🐈'; // ゴール達成
+    lane.style.transform='translateY(-50%) scaleX(-1)'; // ゴールで反転（振り返り）
+  } else {
+    lane.textContent='🐈';
+    lane.style.transform='translateY(-50%)';
+  }
+}
+
+function goFocus(k){curDate=k;updateFH();renderTL();document.getElementById('slideWrap').classList.add('show-focus');}
+function goCalendar(){document.getElementById('slideWrap').classList.remove('show-focus');buildCalendar();}
+function updateFH(){
+  var pk=parseKey(curDate);
+  var dateObj=new Date(pk.y,pk.m,pk.d);
+  var m=pk.m+1,d=pk.d,dow=DAYS_JP[dateObj.getDay()];
+  document.getElementById('focusDateMain').textContent=m+'月'+d+'日';
+  document.getElementById('focusDateDow').textContent='('+dow+')';
+  document.getElementById('focusMsg').textContent=pickFQ();
+  var n=new Date().getHours();document.getElementById('hs').value=n;document.getElementById('he').value=Math.min(n+1,23);
+}
+function addPromo(){
+  var type=document.getElementById('pfType').value;
+  var name=type==='other'?document.getElementById('pfCustom').value.trim():type;
+  if(!name){document.getElementById('pfCustom').focus();return;}
+  var s=document.getElementById('pfStart').value,e=document.getElementById('pfEnd').value;
+  if(!s||!e)return;
+  if(e<s){var tmp=s;s=e;e=tmp;}
+  promos.push({id:Date.now(),startKey:s,endKey:e,text:name,color:selPromoColor});
+  savePromos();
+  document.getElementById('pfCustom').value='';
+  var now=new Date(),later=new Date(now.getTime()+7*86400000);
+  document.getElementById('pfStart').value=toKey(now.getFullYear(),now.getMonth(),now.getDate());
+  document.getElementById('pfEnd').value=toKey(later.getFullYear(),later.getMonth(),later.getDate());
+  buildCalendar();
+}
+function delPromo(id){promos=promos.filter(function(p){return p.id!==id;});savePromos();buildCalendar();}
+function promosForKey(k){return promos.filter(function(p){return k>=p.startKey&&k<=p.endKey;});}
+var MJP=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+function initCal(){var n=new Date();calYear=n.getFullYear();calMonth=n.getMonth();}
+function shiftMonth(d){calMonth+=d;if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;}buildCalendar();}
+function buildCalendar(){
+  document.getElementById('calMonthlyMsg').textContent=pickMQ();
+  document.getElementById('calTitleEra').textContent=calYear+' ('+wareki(calYear)+')年';
+  document.getElementById('calTitleMonth').textContent=(calMonth+1)+'月';
+  var grid=document.getElementById('calGrid');grid.innerHTML='';
+  var firstDay=new Date(calYear,calMonth,1).getDay();
+  var daysIn=new Date(calYear,calMonth+1,0).getDate();
+  var today=todayKey();
+  for(var i=0;i<firstDay;i++){var e=document.createElement('div');e.className='cal-cell empty';grid.appendChild(e);}
+  for(var d=1;d<=daysIn;d++){
+    var key=toKey(calYear,calMonth,d);
+    var ps=promosForKey(key);
+    var hasTasks=allTasks[key]&&allTasks[key].length;
+    var cell=document.createElement('div');
+    var cls='cal-cell';
+    if(key===today)cls+=' today';else if(key===curDate)cls+=' has-sel';
+    cell.className=cls;
+    var numDiv=document.createElement('div');numDiv.className='cal-num';numDiv.textContent=d;cell.appendChild(numDiv);
+    if(hasTasks){var dot=document.createElement('div');dot.className='cal-dot';cell.appendChild(dot);}
+    if(ps.length){
+      var barsDiv=document.createElement('div');barsDiv.className='cell-bars';
+      ps.forEach(function(p){
+        var bar=document.createElement('div');
+        var isS=key===p.startKey,isE=key===p.endKey;
+        var bc='cell-bar';
+        if(isS&&isE)bc+=' bar-solo';else if(isS)bc+=' bar-start';else if(isE)bc+=' bar-end';else bc+=' bar-mid';
+        bar.className=bc;bar.style.background=p.color;bar.title=p.text;barsDiv.appendChild(bar);
+      });
+      cell.appendChild(barsDiv);
+    }
+    (function(k){cell.onclick=function(){goFocus(k);};})(key);
+    grid.appendChild(cell);
+  }
+  renderPromoList();
+}
+function renderPromoList(){
+  var wrap=document.getElementById('promoListWrap');
+  var ms=toKey(calYear,calMonth,1),me=toKey(calYear,calMonth,new Date(calYear,calMonth+1,0).getDate());
+  var vis=promos.filter(function(p){return p.endKey>=ms&&p.startKey<=me;});
+  if(!vis.length){wrap.innerHTML='';return;}
+  var html='<div class="cal-card" style="margin-bottom:0;"><div class="slbl" style="margin-bottom:8px;">イベントスケジュール</div><div class="promo-list">';
+  vis.forEach(function(p){
+    html+='<div class="promo-item"><div class="pi-dot" style="background:'+p.color+'"></div><div class="pi-info"><div class="pi-range">'+fmtKey(p.startKey)+' → '+fmtKey(p.endKey)+'</div><div class="pi-text">'+escHtml(p.text)+'</div></div><button class="pi-del" onclick="delPromo('+p.id+')">✕</button></div>';
+  });
+  html+='</div></div>';
+  wrap.innerHTML=html;
+}
+function getTasks(){return allTasks[curDate]||[];}
+function setTasks(arr){allTasks[curDate]=arr;saveTasks();}
+function addTask(){
+  var name=document.getElementById('ti').value.trim(),memo=document.getElementById('mi').value.trim();
+  var start=parseInt(document.getElementById('hs').value),end=parseInt(document.getElementById('he').value);
+  if(end<=start)end=start+1;if(end>24)end=24;
+  if(!name){document.getElementById('ti').focus();return;}
+  var u=URGENCY[selUrgIdx],arr=getTasks();
+  arr.push({name:name,start:start,end:end,id:Date.now(),color:u.color,urgLabel:u.label,memo:memo||''});
+  setTasks(arr);renderTL();buildCalendar();
+  document.getElementById('ti').value='';document.getElementById('mi').value='';
+}
+function delTask(id){setTasks(getTasks().filter(function(t){return t.id!==id;}));renderTL();buildCalendar();}
+function renderTL(){
+  var el=document.getElementById('tl');el.innerHTML='';
+  var tasks=getTasks();
+  for(var h=CS;h<CE;h++)makeSlot(el,h,tasks);
+  var ot=tasks.filter(function(t){var s=t.start||0,e=t.end||s+1;return e<=CS||s>=CE;});
+  if(ot.length){
+    var lb=document.createElement('div');lb.className='otlbl';lb.textContent='残業 / 時間外';el.appendChild(lb);
+    var uh=[];ot.forEach(function(t){var s=t.start||0,e=t.end||s+1;for(var h=s;h<e;h++)if(uh.indexOf(h)<0)uh.push(h);});
+    uh.sort(function(a,b){return a-b;});uh.forEach(function(h){makeSlot(el,h,tasks);});
+  }
+}
+function makeSlot(el,h,tasks){
+  var st=tasks.filter(function(t){var s=t.start||0,e=t.end||s+1;return h>=s&&h<e;});
+  var div=document.createElement('div');div.className='ts'+(st.length?' ht':'');
+  var inner='';
+  if(st.length){
+    inner='<div class="tts">'+st.map(function(t){
+      var c=t.color||themeAccent,s=t.start||0,e=t.end||s+1,dur=e-s;
+      return '<div class="tag-row"><span class="tag" style="background:'+rgba(c,.12)+';border:.5px solid '+rgba(c,.35)+';color:'+c+'"><span class="dot" style="background:'+c+'"></span>'+escHtml(t.name)+'<span class="tag-dur">'+pad(s)+'–'+pad(e)+(dur>1?' '+dur+'h':'')+'</span><button class="del" onclick="delTask('+t.id+')">✕</button></span></div>'+(t.memo?'<div class="memo-txt">'+escHtml(t.memo)+'</div>':'');
+    }).join('')+'</div>';
+  }else{inner='<span class="emp">— 空き —</span>';}
+  div.innerHTML='<span class="tt">'+pad(h)+':00</span>'+inner;
+  el.appendChild(div);
+}
+var ctxC=document.getElementById('cC').getContext('2d');
+var ctxT=document.getElementById('tC').getContext('2d');
+var CX=140,CY=140,R=126,TO=R-3,TI=R-18,LR=113,NR=82,HH=54,HM=72,HS2=80;
+function cv(v){return getComputedStyle(document.getElementById('app')).getPropertyValue(v).trim();}
+function drawClock(){
+  ctxC.clearRect(0,0,280,280);
+  ctxC.beginPath();ctxC.arc(CX,CY,R,0,Math.PI*2);ctxC.fillStyle=cv('--face');ctxC.fill();
+  var nsa=(CE%12/12)*Math.PI*2-Math.PI/2,nea=(CS/12)*Math.PI*2-Math.PI/2;
+  ctxC.beginPath();ctxC.moveTo(CX,CY);ctxC.arc(CX,CY,R,nsa,nea);ctxC.closePath();ctxC.fillStyle=dark?'rgba(255,255,255,0.02)':'rgba(0,0,0,0.025)';ctxC.fill();
+  var csa=(CS/12)*Math.PI*2-Math.PI/2,cea=(CE%12/12)*Math.PI*2-Math.PI/2;
+  ctxC.beginPath();ctxC.arc(CX,CY,R,csa,cea);ctxC.strokeStyle=rgba(themeAccent,.28);ctxC.lineWidth=3;ctxC.stroke();
+  ctxC.beginPath();ctxC.arc(CX,CY,R,0,Math.PI*2);ctxC.strokeStyle=cv('--border');ctxC.lineWidth=1;ctxC.stroke();
+  for(var m=0;m<60;m++){if(m%5===0)continue;var a=(m/60)*Math.PI*2-Math.PI/2;ctxC.beginPath();ctxC.moveTo(CX+Math.cos(a)*(TI-2),CY+Math.sin(a)*(TI-2));ctxC.lineTo(CX+Math.cos(a)*(TI-7),CY+Math.sin(a)*(TI-7));ctxC.strokeStyle=cv('--tick');ctxC.lineWidth=0.7;ctxC.stroke();}
+  for(var i=0;i<12;i++){var a2=(i/12)*Math.PI*2-Math.PI/2;ctxC.beginPath();ctxC.moveTo(CX+Math.cos(a2)*(TI-2),CY+Math.sin(a2)*(TI-2));ctxC.lineTo(CX+Math.cos(a2)*(TI-12),CY+Math.sin(a2)*(TI-12));ctxC.strokeStyle=rgba(themeAccent,.45);ctxC.lineWidth=2;ctxC.stroke();}
+  for(var n=0;n<12;n++){var an=(n/12)*Math.PI*2-Math.PI/2;ctxC.font='500 17px Inter,system-ui,sans-serif';ctxC.fillStyle=dark?'#f2f2f7':'#0f1111';ctxC.textAlign='center';ctxC.textBaseline='middle';ctxC.fillText(n===0?'12':String(n),CX+Math.cos(an)*NR,CY+Math.sin(an)*NR);}
+  var d=new Date(),h12=d.getHours()%12+d.getMinutes()/60+d.getSeconds()/3600,mins=d.getMinutes()+d.getSeconds()/60;
+  document.getElementById('td').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  var hc=dark?'#d8d0c8':'#0f1111',mc=dark?'#a8a0a0':'#3a3a3c';
+  function hand(deg,len,w,color){var a=deg*Math.PI/180-Math.PI/2;ctxC.beginPath();ctxC.moveTo(CX-Math.cos(a)*12,CY-Math.sin(a)*12);ctxC.lineTo(CX+Math.cos(a)*len,CY+Math.sin(a)*len);ctxC.strokeStyle=color;ctxC.lineWidth=w;ctxC.lineCap='round';ctxC.stroke();}
+  hand(h12*30,HH,5,hc);hand(mins*6,HM,3,mc);hand(d.getSeconds()*6,HS2,1.3,themeAccent);
+  ctxC.beginPath();ctxC.arc(CX,CY,5,0,Math.PI*2);ctxC.fillStyle=themeAccent;ctxC.fill();
+  ctxC.beginPath();ctxC.arc(CX,CY,2,0,Math.PI*2);ctxC.fillStyle=dark?'#000':'#fff';ctxC.fill();
+}
+function drawTasks(){
+  ctxT.clearRect(0,0,280,280);
+  getTasks().forEach(function(t){
+    var s=t.start||0,e=t.end||s+1,c=t.color||themeAccent;
+    var sa=(s%12)/12*Math.PI*2-Math.PI/2,ea=(e%12)/12*Math.PI*2-Math.PI/2;
+    if(ea<=sa)ea+=Math.PI*2;
+    var g=0.025;sa+=g;ea-=g;if(ea<=sa)return;
+    ctxT.beginPath();ctxT.arc(CX,CY,TO,sa,ea);ctxT.arc(CX,CY,TI,ea,sa,true);ctxT.closePath();
+    ctxT.fillStyle=rgba(c,.28);ctxT.fill();ctxT.strokeStyle=rgba(c,.8);ctxT.lineWidth=1.5;ctxT.stroke();
+    var mid=(sa+ea)/2,lx=CX+Math.cos(mid)*LR,ly=CY+Math.sin(mid)*LR;
+    var lbl=t.name.length>5?t.name.slice(0,5)+'…':t.name;
+    ctxT.font='500 10px Inter,system-ui,sans-serif';
+    var tw=ctxT.measureText(lbl).width,pw=tw+8,ph=14,rr=5,rx=lx-pw/2,ry=ly-ph/2;
+    ctxT.fillStyle=dark?'rgba(0,0,0,0.65)':'rgba(255,255,255,0.9)';
+    ctxT.beginPath();ctxT.moveTo(rx+rr,ry);ctxT.lineTo(rx+pw-rr,ry);ctxT.quadraticCurveTo(rx+pw,ry,rx+pw,ry+rr);ctxT.lineTo(rx+pw,ry+ph-rr);ctxT.quadraticCurveTo(rx+pw,ry+ph,rx+pw-rr,ry+ph);ctxT.lineTo(rx+rr,ry+ph);ctxT.quadraticCurveTo(rx,ry+ph,rx,ry+ph-rr);ctxT.lineTo(rx,ry+rr);ctxT.quadraticCurveTo(rx,ry,rx+rr,ry);ctxT.closePath();ctxT.fill();
+    ctxT.fillStyle=dark?'#fff':c;ctxT.textAlign='center';ctxT.textBaseline='middle';ctxT.fillText(lbl,lx,ly);
+  });
+}
+
+function frame(){
+  drawClock();
+  drawTasks();
+  updateCat();
+  requestAnimationFrame(frame);
+}
+
+(function(){
+  var n=new Date(),l=new Date(n.getTime()+7*86400000);
+  document.getElementById('pfStart').value=toKey(n.getFullYear(),n.getMonth(),n.getDate());
+  document.getElementById('pfEnd').value=toKey(l.getFullYear(),l.getMonth(),l.getDate());
+})();
+initCal();curDate=todayKey();buildCalendar();updateFH();renderTL();frame();
+document.getElementById('ti').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('mi').focus();});
+document.getElementById('mi').addEventListener('keydown',function(e){if(e.key==='Enter')addTask();});
+var asw=document.querySelector('#swrCal .sw[data-c="'+themeAccent+'"]');
+if(asw){document.querySelectorAll('#swrCal .sw').forEach(function(s){s.classList.remove('on');});asw.classList.add('on');}
+document.getElementById('tc2Cal').value=themeAccent;
+</script>
