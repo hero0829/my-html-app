@@ -55,8 +55,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
 .cell-bar.bar-end{border-radius:0 2px 2px 0;margin-right:2px;width:calc(100% - 2px);}
 .cell-bar.bar-mid{border-radius:0;width:100%;}
 .cell-bar.bar-solo{border-radius:2px;width:calc(100% - 4px);margin:0 2px;}
-.date-inp-wrap{position:relative;flex:1;}
-.date-inp-wrap input[type=date]{width:100%;background:var(--card2);border:.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:inherit;font-size:13px;font-weight:300;padding:11px;outline:none;cursor:pointer;min-height:44px;}
+.date-inp-wrap{position:relative;flex:1;min-width:0;overflow:hidden;}
+.date-inp-wrap input[type=date]{width:100%;background:var(--card2);border:.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:inherit;font-size:12px;font-weight:300;padding:9px 8px;outline:none;cursor:pointer;min-height:44px;min-width:0;}
 .date-inp-wrap input[type=date]:focus{border-color:var(--accent);}
 .promo-list{display:flex;flex-direction:column;gap:5px;}
 .promo-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:var(--card);border:.5px solid var(--border);}
@@ -75,15 +75,15 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
 .pf-inp::placeholder{color:var(--text3);}
 .pf-custom{display:none;}
 .pf-custom.show{display:flex;}
-.pf-color-row{display:flex;align-items:center;gap:8px;}
+.pf-color-row{display:flex;align-items:center;gap:2px;flex-wrap:nowrap;}
 .pf-clbl{font-size:10px;color:var(--text3);}
-.pf-sw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;flex-shrink:0;}
-.pf-sw.on{transform:scale(1.2);border-color:var(--border2);}
+.pf-sw{width:22px;height:22px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;flex-shrink:0;padding:0;margin:3px;}
+.pf-sw.on{transform:scale(1.2);border-color:var(--border2);margin:3px;}
 .pf-add{background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:14px;font-weight:400;padding:13px;cursor:pointer;min-height:48px;width:100%;}
 .pf-add:active{opacity:.75;}
 .time-sep{font-size:12px;color:var(--text3);flex-shrink:0;}
-.swr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.sw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;min-width:28px;}
+.swr{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.sw{width:22px;height:22px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;min-width:22px;margin:3px;}
 .sw.on,.sw:active{transform:scale(1.2);border-color:var(--border2);}
 .tw{display:flex;align-items:center;gap:6px;margin-left:auto;}
 .tl2{font-size:11px;font-weight:300;color:var(--text2);}
@@ -103,7 +103,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
 .cat-lane{position:relative;height:26px;margin-bottom:3px;overflow:hidden;}
 .cat-lane::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;border-top:1.5px dashed var(--text3);opacity:.28;transform:translateY(-50%);}
 .cat-lane::after{content:'🏠';position:absolute;right:2px;top:50%;transform:translateY(-50%);font-size:16px;line-height:1;}
-.cat-story{display:none;}.cat-icon{position:absolute;top:50%;transform:translateY(-50%);font-size:18px;line-height:1;transition:left .9s linear;pointer-events:none;}
+.cat-story{display:none;}.cat-container{position:absolute;top:50%;left:0;transform:translateY(-50%);display:flex;align-items:center;gap:2px;transition:left .9s linear;pointer-events:none;}.flipped-cat{display:inline-block;transform:scaleX(-1);font-size:18px;line-height:1;}.action-text{display:inline-block;font-size:15px;line-height:1;white-space:nowrap;}
 .focus-hdr{text-align:center;margin-bottom:7px;}
 .focus-date-line{cursor:pointer;display:inline-flex;align-items:baseline;gap:5px;padding:6px 14px;border-radius:14px;-webkit-user-select:none;user-select:none;}
 .focus-date-line:active{background:var(--accent-light);}
@@ -127,9 +127,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
 .memo-inp:focus{border-color:var(--accent);}
 .cpw{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .cplbl{font-size:10px;font-weight:300;color:var(--text3);}
-.csws{display:flex;gap:10px;}
-.csw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
-.csw.on{transform:scale(1.2);border-color:rgba(255,255,255,.5);}
+.csws{display:flex;gap:0;align-items:center;}
+.csw{width:22px;height:22px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;margin:3px;}
+.csw.on{transform:scale(1.2);border-color:var(--border2);margin:3px;}
 .badd{width:100%;background:var(--accent);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:14px;font-weight:400;letter-spacing:.04em;padding:13px;cursor:pointer;min-height:48px;}
 .badd:active{opacity:.75;}
 .tl{display:flex;flex-direction:column;gap:5px;}
@@ -186,7 +186,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
      <div class="pf-color-row">
       <span class="pf-clbl">色を選択</span>
       <div id="pfColorSwatches"></div>
-      <input type="color" id="pfColorPicker" value="#BF0000" onchange="setPfColor(this.value)" style="width:28px;height:28px;border:1.5px solid transparent;border-radius:50%;cursor:pointer;padding:0;background:none;flex-shrink:0;"/>
+      <input type="color" id="pfColorPicker" value="#BF0000" onchange="setPfColor(this.value)" style="width:26px;height:26px;border:1.5px solid var(--border2);border-radius:6px;cursor:pointer;padding:0;background:none;flex-shrink:0;margin:3px;"/>
      </div>
      <button class="pf-add" onclick="addPromo()">＋ 追加</button>
     </div>
@@ -200,7 +200,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
      <div class="sw" style="background:#FF0033;" data-c="#FF0033" onclick="setTheme(this)"></div>
      <div class="sw" style="background:#00B900;" data-c="#00B900" onclick="setTheme(this)"></div>
      <div class="sw" style="background:#666666;" data-c="#666666" onclick="setTheme(this)"></div>
-     <input type="color" id="tc2Cal" value="#BF0000" onchange="setThemeColor(this.value)" style="width:26px;height:26px;border:none;border-radius:50%;cursor:pointer;padding:0;background:none;"/>
+     <input type="color" id="tc2Cal" value="#BF0000" onchange="setThemeColor(this.value)" style="width:26px;height:26px;border:1.5px solid var(--border2);border-radius:6px;cursor:pointer;padding:0;background:none;margin:3px;"/>
      <div class="tw">
       <span class="tl2">ライト</span>
       <label class="tog"><input type="checkbox" id="dtogCal" onchange="toggleDark(this)"/><span class="tsl"></span></label>
@@ -220,7 +220,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
      <button class="day-btn" onclick="shiftDay(1)">翌日 &#8250;</button>
     </div>
    </div>
-   <div class="cat-lane"><span class="cat-icon" id="catIcon">🐈</span></div>
+   <div class="cat-lane"><div class="cat-container" id="catContainer"><span id="catSprite" class="flipped-cat">🐈</span><span id="catAction" class="action-text"></span></div></div>
    <div class="focus-hdr">
     <div class="focus-date-line" onclick="goCalendar()">
      <span class="focus-date-main" id="focusDateMain"></span>
@@ -242,7 +242,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothi
      <select id="he"></select>
     </div>
     <input class="memo-inp" type="text" id="mi" placeholder="メモ（任意）..." maxlength="40" autocomplete="off"/>
-    <div class="cpw"><span class="cplbl">色を選択</span><div class="csws" id="csws"></div><input type="color" id="taskColorPicker" value="#BF0000" style="width:28px;height:28px;border:1.5px solid transparent;border-radius:50%;cursor:pointer;padding:0;background:none;flex-shrink:0;"/></div>
+    <div class="cpw"><span class="cplbl">色を選択</span><div class="csws" id="csws"></div><input type="color" id="taskColorPicker" value="#BF0000" style="width:26px;height:26px;border:1.5px solid var(--border2);border-radius:6px;cursor:pointer;padding:0;background:none;flex-shrink:0;margin:3px;"/></div>
     <button class="badd" onclick="addTask()">＋ タスクを追加</button>
    </div>
    <div class="slbl" style="margin-top:4px;">Timeline</div>
@@ -261,63 +261,34 @@ function wareki(y){if(y>=2019)return '\u4ee4\u548c'+(y-2018);if(y>=1989)return '
 /* ── ランダム猫 ── */
 var BASE_CATS=['🐈','🐈‍⬛','🐅','🐆'];
 function randCat(){return BASE_CATS[Math.floor(Math.random()*BASE_CATS.length)];}
-function randCat2(exclude){var pool=BASE_CATS.filter(function(c){return c!==exclude;});return pool[Math.floor(Math.random()*pool.length)];}
 
-/* ── 35パターン ── */
+/* ── 50パターン: 絵文字のみ・右進行・get()行ごとランダム ── */
 function buildStories(){
-  var c=randCat();
-  var c2=randCat2(c);
-  var c3=randCat2(c2);
-
-  /* 単体パターン (15種) */
-  var solo=[
-    c+' 💨 👑 (王冠ゲット)',
-    c+' ✨ 📦 (箱を開けた)',
-    c+' 🎣 🐟 (大物ゲット)',
-    c+' 💻 ☕ (徹夜デバッグ)',
-    c+' 🔭 ✨ (天体観測中)',
-    c+' 🎨 🖼️ (名画制作中)',
-    c+' 🍳 🔥 (朝ごはん中)',
-    c+' 🎸 ⚡ (野外ライブ)',
-    c+' 🛸 👽 (拉致される!)',
-    c+' 🚀 ✨ (宇宙へ出発)',
-    c+' 🎯 💥 (完璧な狙撃)',
-    c+' 🏆 😎 (表彰台独占)',
-    c+' 🌙 ⭐ (夜空を観察)',
-    c+' 🍕 😤 (ピザを死守)',
-    c+' 🤿 🐙 (深海探検中)'
+  function g(){return BASE_CATS[Math.floor(Math.random()*BASE_CATS.length)];}
+  return [
+    /* 右のアイテムを追いかける */
+    {cat:g(),action:'💨 🧶'},{cat:g(),action:'✨ 🐟'},{cat:g(),action:'🏃 🦋'},
+    {cat:g(),action:'💨 🐭'},{cat:g(),action:'🐾 🍗'},{cat:g(),action:'👀 🐦'},
+    {cat:g(),action:'💨 🧀'},{cat:g(),action:'✨ 🌸'},{cat:g(),action:'🏃 🎯'},
+    {cat:g(),action:'💨 🎣'},{cat:g(),action:'👃 🍕'},{cat:g(),action:'🐾 🐠'},
+    {cat:g(),action:'💨 🎀'},{cat:g(),action:'✨ 🍖'},{cat:g(),action:'🏃 🐿️'},
+    /* 複数猫・動物との関わり */
+    {cat:g(),action:'💨 '+g()},{cat:g(),action:'🐾 '+g()},{cat:g(),action:'❗❓ '+g()},
+    {cat:g(),action:'❤️ '+g()},{cat:g(),action:'🐾 '+g()+' 🐾'},{cat:g(),action:g()+' 💨'},
+    {cat:g(),action:g()+' '+g()},{cat:g(),action:'💬 '+g()},{cat:g(),action:'😤 '+g()},
+    {cat:g(),action:'✨ 🤝 '+g()},{cat:g(),action:g()+' 🌸'},{cat:g(),action:'🎵 '+g()},
+    {cat:g(),action:g()+' 💤'},{cat:g(),action:'🎁 '+g()},{cat:g(),action:'👀 '+g()+' ❓'},
+    /* 記号による感情・状況表現 */
+    {cat:g(),action:'💤 💤'},{cat:g(),action:'⁉️ 💨'},{cat:g(),action:'🎵 ✨'},
+    {cat:g(),action:'🍕 😋'},{cat:g(),action:'☕ 😌'},{cat:g(),action:'🌙 ✨'},
+    {cat:g(),action:'🎸 🎵'},{cat:g(),action:'🌂 ☔'},{cat:g(),action:'📦 ❓'},
+    {cat:g(),action:'🔥 😤'},{cat:g(),action:'🌈 ✨'},{cat:g(),action:'🍜 😋'},
+    {cat:g(),action:'📚 💤'},{cat:g(),action:'🎃 👻'},{cat:g(),action:'🛸 ⁉️'},
+    {cat:g(),action:'❄️ 💨'},{cat:g(),action:'🌺 😌'},{cat:g(),action:'⚡ 💨'},
+    {cat:g(),action:'🎉 ✨'},{cat:g(),action:'🌊 🏄'}
   ];
-
-  /* 群れパターン (10種) */
-  var herd=[
-    c+' '+c2+' 💨 (二匹でダッシュ)',
-    c+' '+c2+' 🌸 (並んでお散歩)',
-    c+' '+c2+' 🐾 (足跡をたどる)',
-    c+' '+c2+' ☕ (朝のコーヒー)',
-    c+' '+c2+' '+c3+' 🐾 (三匹で行進)',
-    c+' '+c2+' '+c3+' 🌿 (草むらを探索)',
-    c+' '+c2+' 🎵 (二匹で鼻歌)',
-    c+' '+c2+' 🍜 (おそろいランチ)',
-    c+' '+c2+' '+c3+' 💤 (三匹で昼寝)',
-    c+' '+c2+' 🏃 (かけっこ勝負)'
-  ];
-
-  /* シチュエーションパターン (10種) */
-  var situation=[
-    c+' ⁉️ '+c2+' (突然の遭遇)',
-    c+' ❓  ❓ '+c2+' (お互い疑問)',
-    '🐾 '+c+' '+c2+' (足跡を追跡)',
-    c+' 👀 💭 '+c2+' (じっと観察)',
-    c+' 💬 '+c2+' (なにか相談中)',
-    c+' 😤  😤 '+c2+' (にらみ合い)',
-    c+' 🎁  🎁 '+c2+' (プレゼント交換)',
-    c2+' 🏃💨 '+c+' (全力で追いかけ)',
-    c+' ✨ 🤝 ✨ '+c2+' (握手で和解)',
-    c+' 💤  💤 '+c2+' (一緒にお昼寝)'
-  ];
-
-  return solo.concat(herd).concat(situation);
 }
+
 var STORIES=buildStories();
 var currentStory=STORIES[Math.floor(Math.random()*STORIES.length)];
 
@@ -371,14 +342,21 @@ function pickMQ(){var m=new Date().getMonth()+1;var l=MONTHLY_QUOTES[m];return l
     document.querySelectorAll('.csw').forEach(function(x){x.classList.remove('on');});
   };
 })();
-(function(){var el=document.getElementById('pfColorSwatches');el.style.cssText='display:flex;gap:8px;';PROMO_COLORS.forEach(function(c,i){var d=document.createElement('div');d.className='pf-sw'+(i===0?' on':'');d.style.background=c;d.onclick=function(){document.querySelectorAll('.pf-sw').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selPromoColor=c;};el.appendChild(d);});})();
+(function(){var el=document.getElementById('pfColorSwatches');el.style.cssText='display:flex;gap:0;align-items:center;';PROMO_COLORS.forEach(function(c,i){var d=document.createElement('div');d.className='pf-sw'+(i===0?' on':'');d.style.background=c;d.onclick=function(){document.querySelectorAll('.pf-sw').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selPromoColor=c;};el.appendChild(d);});})();
 function buildHS(el){for(var h=0;h<24;h++){var o=document.createElement('option');o.value=h;o.textContent=pad(h)+':00';el.appendChild(o);}}
 buildHS(document.getElementById('hs'));buildHS(document.getElementById('he'));
 function syncEndTime(){var ns=parseInt(document.getElementById('hs').value),ce=parseInt(document.getElementById('he').value);if(ce<=ns)document.getElementById('he').value=Math.min(ns+1,23);}
 function onTypeChange(){var v=document.getElementById('pfType').value;document.getElementById('pfCustomWrap').className='pf-custom'+(v==='other'?' show':'');}
-function shiftDay(delta){var pk=parseKey(curDate);var d=new Date(pk.y,pk.m,pk.d);d.setDate(d.getDate()+delta);curDate=toKey(d.getFullYear(),d.getMonth(),d.getDate());currentStory=STORIES[Math.floor(Math.random()*STORIES.length)];updateFH();renderTL();}
-function updateCat(){var now=new Date();var totalMin=(CE-CS)*60;var elapsed=(now.getHours()-CS)*60+now.getMinutes()+now.getSeconds()/60;var ratio=Math.max(0,Math.min(1,elapsed/totalMin));var el=document.getElementById('catIcon');if(!el)return;var laneW=el.parentElement.offsetWidth||300;var maxLeft=laneW-36;el.style.left=Math.max(0,Math.round(ratio*maxLeft))+'px';el.style.transform=ratio>=1?'translateY(-50%) scaleX(-1)':'translateY(-50%)';}
-function goFocus(k){curDate=k;currentStory=STORIES[Math.floor(Math.random()*STORIES.length)];updateFH();renderTL();document.getElementById('slideWrap').classList.add('show-focus');}
+function shiftDay(delta){var pk=parseKey(curDate);var d=new Date(pk.y,pk.m,pk.d);d.setDate(d.getDate()+delta);curDate=toKey(d.getFullYear(),d.getMonth(),d.getDate());currentStory=STORIES[Math.floor(Math.random()*STORIES.length)];updateCatStory(currentStory);updateFH();renderTL();}
+function updateCatStory(story){
+  var s=story||currentStory;
+  var sprite=document.getElementById('catSprite');
+  var action=document.getElementById('catAction');
+  if(sprite) sprite.textContent=s.cat;
+  if(action) action.textContent=s.action;
+}
+function updateCat(){var now=new Date();var totalMin=(CE-CS)*60;var elapsed=(now.getHours()-CS)*60+now.getMinutes()+now.getSeconds()/60;var ratio=Math.max(0,Math.min(1,elapsed/totalMin));var el=document.getElementById('catContainer');if(!el)return;var laneW=el.parentElement.offsetWidth||300;var maxLeft=laneW-44;el.style.left=Math.max(0,Math.round(ratio*maxLeft))+'px';}
+function goFocus(k){curDate=k;currentStory=STORIES[Math.floor(Math.random()*STORIES.length)];updateCatStory(currentStory);updateFH();renderTL();document.getElementById('slideWrap').classList.add('show-focus');}
 function goCalendar(){document.getElementById('slideWrap').classList.remove('show-focus');buildCalendar();}
 function updateFH(){var pk=parseKey(curDate);var dateObj=new Date(pk.y,pk.m,pk.d);var m=pk.m+1,d=pk.d,dow=DAYS_JP[dateObj.getDay()];document.getElementById('focusDateMain').textContent=m+'\u6708'+d+'\u65E5';document.getElementById('focusDateDow').textContent='('+dow+')';document.getElementById('focusMsg').textContent=pickFQ();var n=new Date().getHours();document.getElementById('hs').value=n;document.getElementById('he').value=Math.min(n+1,23);}
 function addPromo(){var type=document.getElementById('pfType').value;var name=type==='other'?document.getElementById('pfCustom').value.trim():type;if(!name){document.getElementById('pfCustom').focus();return;}var s=document.getElementById('pfStart').value,e=document.getElementById('pfEnd').value;if(!s||!e)return;if(e<s){var tmp=s;s=e;e=tmp;}promos.push({id:Date.now(),startKey:s,endKey:e,text:name,color:selPromoColor});savePromos();document.getElementById('pfCustom').value='';var now=new Date(),later=new Date(now.getTime()+7*86400000);document.getElementById('pfStart').value=toKey(now.getFullYear(),now.getMonth(),now.getDate());document.getElementById('pfEnd').value=toKey(later.getFullYear(),later.getMonth(),later.getDate());buildCalendar();}
@@ -410,7 +388,7 @@ function drawClock(){ctxC.clearRect(0,0,SZ,SZ);ctxC.beginPath();ctxC.arc(CX,CY,R
 function drawTasks(){ctxT.clearRect(0,0,SZ,SZ);getTasks().forEach(function(t){var s=t.start||0,e=t.end||s+1,c=t.color||themeAccent;var sa=(s%12)/12*Math.PI*2-Math.PI/2,ea=(e%12)/12*Math.PI*2-Math.PI/2;if(ea<=sa)ea+=Math.PI*2;var g=0.025;sa+=g;ea-=g;if(ea<=sa)return;ctxT.beginPath();ctxT.arc(CX,CY,TO,sa,ea);ctxT.arc(CX,CY,TI,ea,sa,true);ctxT.closePath();ctxT.fillStyle=rgba(c,.28);ctxT.fill();ctxT.strokeStyle=rgba(c,.8);ctxT.lineWidth=1.5;ctxT.stroke();var mid=(sa+ea)/2,lx=CX+Math.cos(mid)*LR,ly=CY+Math.sin(mid)*LR;var lbl=t.name.length>5?t.name.slice(0,5)+'\u2026':t.name;ctxT.font='500 10px Inter,system-ui,sans-serif';var tw=ctxT.measureText(lbl).width,pw=tw+8,ph=14,rr=5,rx=lx-pw/2,ry=ly-ph/2;ctxT.fillStyle=dark?'rgba(0,0,0,0.65)':'rgba(255,255,255,0.9)';ctxT.beginPath();ctxT.moveTo(rx+rr,ry);ctxT.lineTo(rx+pw-rr,ry);ctxT.quadraticCurveTo(rx+pw,ry,rx+pw,ry+rr);ctxT.lineTo(rx+pw,ry+ph-rr);ctxT.quadraticCurveTo(rx+pw,ry+ph,rx+pw-rr,ry+ph);ctxT.lineTo(rx+rr,ry+ph);ctxT.quadraticCurveTo(rx,ry+ph,rx,ry+ph-rr);ctxT.lineTo(rx,ry+rr);ctxT.quadraticCurveTo(rx,ry,rx+rr,ry);ctxT.closePath();ctxT.fill();ctxT.fillStyle=dark?'#fff':c;ctxT.textAlign='center';ctxT.textBaseline='middle';ctxT.fillText(lbl,lx,ly);});}
 function frame(){updateGeometry();drawClock();drawTasks();updateCat();requestAnimationFrame(frame);}
 (function(){var n=new Date(),l=new Date(n.getTime()+7*86400000);document.getElementById('pfStart').value=toKey(n.getFullYear(),n.getMonth(),n.getDate());document.getElementById('pfEnd').value=toKey(l.getFullYear(),l.getMonth(),l.getDate());})();
-initCal();curDate=todayKey();buildCalendar();updateFH();renderTL();frame();
+initCal();curDate=todayKey();buildCalendar();updateCatStory(currentStory);updateFH();renderTL();frame();
 document.getElementById('ti').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('mi').focus();});
 document.getElementById('mi').addEventListener('keydown',function(e){if(e.key==='Enter')addTask();});
 var asw=document.querySelector('#swrCal .sw[data-c="'+themeAccent+'"]');
